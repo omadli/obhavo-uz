@@ -1,0 +1,118 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if search == '200' %}
+        <div class="alert alert-success" role="alert">
+          Qidiruv natijalari
+        </div>
+    {% elif search == '404' %}
+        <div class="alert alert-danger" role="alert">
+          Ushbu shahar topilmadi
+        </div>
+    {% endif %}
+
+<!-- current -->
+<div class="grid-1 cont-block">
+    <div class="padd-block">
+        <div class="row">
+            <div class="col">
+                <h2>{{ city_name }}</h2>
+                <div class="current-day">Bugun {{ day }}-{{ month }}  <strong>{{ weekday }}</strong></div>
+                <div class="current-forecast">
+                    <span><strong>{% if temp > 0 %}+{% endif %}{{ temp }}°</strong></span>
+                </div>
+
+                <div class="current-forecast-desc">{{ main }}</div>
+            </div>
+            <div class="col">
+                <span><img src="/static/images/{{ icon }}@2x.png" width="170px" /></span>
+            </div>
+        </div>
+        <div class="current-forecast-details" font-size="32px">
+            <div class="row text-dark g2">
+                <div class="col border border-light d-table">
+                    <p class="d-table-row"><i class="bi bi-thermometer-sun"></i> Maks/min: {% if max > 0 %}+{% endif %}{{ max }}°/{% if min > 0 %}+{% endif %}{{ min }}°</p>
+                    <p class="d-table-row"><i class="bi bi-umbrella"></i> Yog'ingarchilik: {{ pop }}%</p>
+                    <p class="d-table-row"><i class="bi bi-arrows-collapse"></i> Bosim: {{pressure}} mm sim. ust.</p>
+                    <p class="d-table-row"><i class="bi bi-moisture"></i> Namlik: {{ humidity }}%</p>
+                    <p class="d-table-row"><i class="bi bi-droplet-half"></i> Shudring nuqtasi: {{ dev_point }}°</p> 
+                </div>
+                <div class="col-7 border border-light d-table">
+                    <p class="d-table-row"><i class="bi bi-wind"></i> Shamol: {{wind_speed}} km/soat {{wind_side}}dan</p>
+                    <p class="d-table-row"><i class="bi bi-brightness-high-fill"></i> UB indeksi: {{ uvi }}/10</p>
+                    <p class="d-table-row"><i class="bi bi-sunrise"></i> Quyosh chiqishi: {{sunrise}}</p>
+                    <p class="d-table-row"><i class="bi bi-sunset"></i> Quyosh botishi: {{sunset}}</p>
+                    <p class="d-table-row"><i class="bi bi-moon-fill"></i> Oy fazasi: {{ moon_phase }}</p>
+                </div>
+            </div>
+            <div class="clear"></div>
+
+        </div>
+        <hr />
+        <div class="row align-items-center">
+            <div class="col">
+                <p class="time-of-day"><strong>Tong: {% if morn_temp > 0 %}+{% endif %}{{ morn_temp }}°</strong></p>
+                <p class="icon" title="#"><img src="/static/images/{{ icon|slice:2 }}d@2x.png" width="70px" align="center" /></p>
+            </div>
+            <div class="col">
+                <p class="time-of-day"><strong>Kun: {% if day_temp > 0 %}+{% endif %}{{ day_temp }}°</strong></p>
+                <p class="icon" title="#"><img src="/static/images/{{ icon|slice:2 }}d@2x.png" width="70px" align="center" /></p>
+            </div>
+            <div class="col">
+                <p class="time-of-day"><strong>Tun: {% if night_temp > 0 %}+{% endif %}{{ night_temp }}°</strong></p>
+                <p class="icon" title="#"><img src="/static/images/{{ icon|slice:2 }}n@2x.png" width="70px" align="center" /></p>
+            </div>
+
+            <div class="clear"></div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- forecast 7 days -->
+<div class="grid-2 cont-block">
+
+    <div class="padd-block">
+        <h2>Haftalik ob-havo ma&#039;lumoti</h2>
+    </div>
+
+    <table class="weather-table">
+        <tr>
+            <th class="weather-row-day">Kun</th>
+            <th class="weather-row-day-short">Kun</th>
+            <th colspan="2">Harorat</th>
+            <th class="weather-row-desc">Tavsif</th>
+            <th class="weather-row-pop">Yog&#039;ingarchilik</th>
+        </tr>
+
+        {% for day in daily %}
+        <tr>
+            <td class="weather-row-day {% if day.weekend == '0' or day.weekend == '6' %} weekend{% endif %}">
+                <strong>{% if day == daily.0 %}Ertaga{% else %}{{ day.weekday }}{% endif %}</strong>
+                <div>{{ day.day }}-{{ day.month }}</div>
+            </td>
+            <td class="weather-row-day-short ">
+                <strong>{{ day.weekday|slice:2 }}</strong>
+                <div>{{ day.day }}-{{ day.month|slice:3 }}</div>
+            </td>
+            <td class="weather-row-forecast-icon">
+                <span title="#"><img src="/static/images/{{ day.icon }}@2x.png" title="{{ day.main }}" width="30px" /></span>
+            </td>
+            <td class="weather-row-forecast">
+                <span class="forecast-day">{% if day.max > 0 %}+{% endif %}{{ day.max }}°</span>
+                <span class="forecast-night">{% if day.min > 0 %}+{% endif %}{{ day.min }}°</span>
+            </td>
+            <td class="weather-row-desc">
+                <span> <strong>{{ day.main }} </strong></span>
+                <span><div> {{ day.description }}</div></span>
+            </td>
+            <td class="weather-row-pop">{{ day.pop }}%</td>
+        </tr>
+        {% endfor %}
+            </table>
+</div>
+
+{% endblock %}
