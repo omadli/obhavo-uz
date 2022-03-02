@@ -17,8 +17,20 @@ def main(request, city_name="Tashkent"):
 def search(request):
 	cities = City.objects.all()
 	q = request.GET.get('q')
+	lat = request.GET.get('lat')
+	lon = request.GET.get('lon')
 	if q:
 		data = search_city(q)
+		if data:
+			data.update({'Cities': cities, 'search': '200'})
+			return render(request, 'home.html', data)
+		else:
+			tosh = City.objects.get(city="Tashkent")
+			data = getDataCity(tosh)
+			data.update({'Cities': cities, 'search': '404'})
+			return render(request, 'home.html', data)
+	elif lat and lon:
+		data = search_location(lat, lon)
 		if data:
 			data.update({'Cities': cities, 'search': '200'})
 			return render(request, 'home.html', data)
