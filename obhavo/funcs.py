@@ -57,6 +57,12 @@ def getDataCity(city:City):
 	res = w.onecall(city.lat, city.lon)
 	return filter_res(res, city.name)
 
+def search_location(lat, lon):
+	res1 = w.current(lat, lon)
+	if res1['cod'] == "404":
+		return False
+	res2 = w.onecall(lat, lon)
+	return filter_res(res2, res1['name'])
 
 def search_city(q):
 	res1 = w.by_city(q)
